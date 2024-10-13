@@ -1,0 +1,718 @@
+		Indore Institute of Science &amp; Technology
+ 	  Department of Computer Science &amp; Allied Department
+ 			  LIST OF Programs
+ 			       SET-2
+ 			     Algolution
+
+
+1)Given an integer array nums, find the subarray with the largest sum, and return its sum.
+
+ Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+ Output: 6
+ Explanation: The subarray [4,-1,2,1] has the largest sum 6
+
+
+class Practice{
+    static int largestSubarraySum(int[] arr){
+        int currSum = arr[0];
+        int maxSum = arr[0];
+
+        for(int i = 1; i <arr.length; i++){
+            currSum = Math.max(arr[i], currSum + arr[i]);
+            maxSum = Math.max(maxSum, currSum);
+        }
+
+        return maxSum;
+    }
+    public static void main(String args[]){
+        int[] nums = {-2,1,-3,4,-1,2,1,-5,4};
+        System.out.println("Maximum subarray sum is : "+largestSubarraySum(nums));
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+ 2) Given an integer array arr[] of size n, the task is to find the count inversions of the given array.
+ Two array elements arr[i] and arr[j] form an inversion if arr[i] > arr[j] and i < j.
+
+ Input: arr[] = {7, 2, 6, 3}
+ Output: 4
+ Explanation: Given array has 4 inversions: (7, 2), (7, 6), (7, 3), (6, 3)
+
+
+class Practice{
+    static int inversionCount(int[] arr){
+        int count = 0;
+        for(int i = 0; i < arr.length; i++){
+            for(int j = i+1;  j < arr.length; j++){
+                if(arr[i] > arr[j]) count++;
+            }
+        }
+
+        return count;
+    }
+    public static void main(String args[]){
+        int[] nums = {7, 2, 6, 3};
+        System.out.println("Maximum subarray sum is : "+inversionCount(nums));
+    }
+}
+
+================================================================================
+If one wants to print pairs also
+================================================================================
+
+import java.util.ArrayList;
+
+class Practice{
+    static int inversionCount(int[] arr){
+        ArrayList<ArrayList<Integer>> pairs = new ArrayList<>();
+        int count = 0;
+        for(int i = 0; i < arr.length; i++){
+            for(int j = i+1;  j < arr.length; j++){
+
+                if(arr[i] > arr[j]){
+                    ArrayList<Integer> pair = new ArrayList<>();
+                    count++;
+                    pair.add(arr[i]);
+                    pair.add(arr[j]);
+                    pairs.add(pair);
+                }
+            }
+        }
+
+        System.out.println(pairs);
+        return count;
+    }
+    public static void main(String args[]){
+        int[] nums = {7, 2, 6, 3};
+        System.out.println("Maximum subarray sum is : "+inversionCount(nums));
+    }
+}
+
+
+=================================================================================
+
+import java.util.ArrayList;
+
+class Practice{
+    static class Pair{
+        int first,second;
+        Pair(int first, int second){
+            this.first = first;
+            this.second = second;
+        }
+
+        @Override
+        public String toString() {
+            return "("+first+","+second+")";
+        }
+    }
+    static int inversionCount(int[] arr){
+        ArrayList<Pair> pairs = new ArrayList<>();
+        int count = 0;
+        for(int i = 0; i < arr.length; i++){
+            for(int j = i+1;  j < arr.length; j++){
+
+                if(arr[i] > arr[j]){
+                    count++;
+                    pairs.add(new Pair(arr[i], arr[j]));
+                }
+            }
+        }
+
+        System.out.println(pairs);
+        return count;
+    }
+    public static void main(String args[]){
+        int[] nums = {7, 2, 6, 3};
+        System.out.println("Maximum subarray sum is : "+inversionCount(nums));
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+ 3)Given an integer array nums and an integer k, return the kth largest element in the array.
+ Note that it is the kth largest element in the sorted order, not the kth distinct element.
+ Solve it without sorting.
+
+ Example:
+ Input: nums = [3,2,1,5,6,4], k = 2
+ Output: 5
+
+====================================================== TC : O(n logn + k logn) SC : O(n)
+
+import java.util.PriorityQueue;
+
+public class Main
+{
+    static int kthLargestElement(int[] arr, int k){
+        if(arr.length < k){
+            return -1;
+        }
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a,b) -> b.compareTo(a));
+        
+        for(int ele : arr){
+            pq.add(ele);;
+        }
+        
+        while(k != 1){
+            pq.poll();
+            k--;
+        }
+        
+        return pq.poll();
+    }
+    
+	public static void main(String[] args) {
+	    int[] arr = {3,2,1,5,6,4};
+	    int k = 4;
+		System.out.println(k+" largest element in array is : "+kthLargestElement(arr, k));
+	}
+}
+
+=============================================================TC : O(n log k) / SC : O(k)
+
+import java.util.PriorityQueue;
+
+public class Main
+{
+    static int kthLargestElement(int[] arr, int k){
+        if(arr.length < k){
+            return -1;
+        }
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>(k);
+        
+        for(int ele : arr){
+            pq.offer(ele);
+            if(pq.size() > k){
+                pq.poll();
+            }
+        }
+        
+        return pq.peek();
+    }
+    
+	public static void main(String[] args) {
+	    int[] arr = {3,2,1,5,6,4};
+	    int k = 2;
+		System.out.println(k+" largest element in array is : "+kthLargestElement(arr, k));
+	}
+}
+-----------------------------------------------------------------------------------------------------------
+
+ 4)A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and
+ removing all non-alphanumeric characters, it reads the same forward and backward.
+ Alphanumeric characters include letters and numbers.
+
+ Given a string s, return true if it is a palindrome, or false otherwise.
+
+ Example 1:
+
+ Input: s = “A man, a plan, a canal: Panama”
+ Output: true
+ Explanation: “amanaplanacanalpanama” is a palindrome.
+
+ Example 2:
+
+ Input: s = “race a car”;
+ Output: false
+
+
+public class Main
+{
+    static boolean isPalindromeString(String str){
+        StringBuilder sb = new StringBuilder();
+        
+        for(char ch : str.toCharArray()){
+            if(ch >= 65 && ch <= 90){
+                sb.append((char)(ch+32));
+            }
+            else if(ch >= 97 && ch <= 122){
+                sb.append(ch);
+            }
+        }
+        
+        System.out.println("String : "+sb);
+        for(int i = 0; i < sb.length()/2; i++){
+            if(sb.charAt(i) != sb.charAt(sb.length() - i - 1)) return false;
+        }
+        
+        return true;
+    }
+	public static void main(String[] args) {
+	    String str = "A man, a plan, a canal: Panama";
+	    String str2 = "race a car";
+		System.out.println(isPalindromeString(str));
+		System.out.println(isPalindromeString(str2));
+	}
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+ 5) Given an array arr[] of size n, return an equilibrium index (if any) or-1 if no equilibrium index
+ exists. The equilibrium index of an array is an index such that the sum of elements at lower
+ indexes equals the sum of elements at higher indexes.
+
+ Note: Return equilibrium point in 1-based indexing. Return-1 if no such point exists.
+ Examples:
+
+ Input: arr[] = {-7, 1, 5, 2,-4, 3, 0}
+ Output: 4
+ Explanation: In 1-based indexing, 4 is an equilibrium index, because:
+ arr[1] + arr[2] + arr[3] = arr[5] + arr[6] + arr[7]
+
+ Input: arr[] = {1, 2, 3}
+ Output:-1
+ Explanation: There is no equilibrium index in the array.
+
+ Input:arr = {1, 3, 5, 2, 2}
+ Expected Output:2
+ Explanation: At index 2, the sum of elements on the left (1 + 3 = 4) is equal to the sum of
+ elements on the right (2 + 2 = 4).
+
+========================================================= O(n^2)
+
+public class Main
+{
+    static int equilibriumIndex(int[] arr){
+        for(int i = 0; i < arr.length; i++){
+            int leftSum = Integer.MIN_VALUE, rightSum = Integer.MIN_VALUE;
+            int leftIdx = 0, rightIdx = i+1;
+            
+            for(int idx = leftIdx; idx < i; idx++){
+                leftSum += arr[idx];
+            }
+            
+            for(int idx = rightIdx; idx < arr.length; idx++){
+                rightSum += arr[idx];
+            }
+            
+            if(leftSum == rightSum) return i;
+        }
+        
+        return -1;
+    }
+    
+	public static void main(String[] args) {
+	    int[] arr = {-7, 1, 5, 2, -4, 3, 0};
+		System.out.println("Equilibrium Index In Array : "+equilibriumIndex(arr));
+	}
+}
+
+========================================================== O(n)
+
+public class Main
+{
+    static int equilibriumIndex(int[] arr){
+        int leftSum = 0, totSum = 0;
+        
+        for(int ele : arr){
+            totSum += ele;
+        }
+        
+        for(int i = 0; i < arr.length; i++){
+            totSum -= arr[i];
+            
+            if(leftSum == totSum){
+                return i;
+            }
+            
+            leftSum += arr[i];
+        }
+        
+        return -1;
+    }
+    
+	public static void main(String[] args) {
+	    int[] arr = {-7, 1, 5, 2, -4, 3, 0};
+		System.out.println("Equilibrium Index In Array : "+equilibriumIndex(arr));
+	}
+}
+
+
+-----------------------------------------------------------------------------------------------------------
+
+ 6)Given a sorted array A (sorted in ascending order), having N integers, find if there exists any
+ pair of elements (A[i], A[j]) such that their sum is equal to X.
+
+ a)Using Naive Approach
+ b)Using Two Pointer Technique
+
+ Input: A = [1, 2, 4, 5, 7, 11]
+ N=6
+ X =9
+
+ Expected Output: Yes
+ (Explanation: The pair (2, 7) sums to 9.)
+
+================================================================== O(n^2)
+
+public class Main
+{
+    static String targetSumPair(int arr[], int target){
+        for(int i = 0; i < arr.length; i++){
+            int currNum = arr[i];
+            
+            for(int j = i+1; j < arr.length; j++){
+                if( (currNum + arr[j]) == target ){
+                    return "Yes!"
+                }
+            }
+        }
+        
+        return " No!";
+    }
+    
+	public static void main(String[] args) {
+	    int arr[] = {1,2,4,5,7,11};
+	    int target = 9;
+		System.out.println("Does array have any pair havinf a sum "+target+" : "+targetSumPair(arr, target));
+	}
+}
+
+================================================================= O(n)
+
+public class Main
+{
+    static String targetSumPair(int[]  arr,int target){
+        int left = 0, right = arr.length - 1;
+        
+        while(left < right){
+            int currSum = arr[left] + arr[right];
+            
+            if(currSum == target) return "Yes!";
+            else if(currSum < target) left++;
+            else right--;
+        }
+        
+        return "No!";
+    }
+    
+	public static void main(String[] args) {
+		int arr[] = {1,2,4,5,7,11};
+	    int target = 9;
+		System.out.println("Does array have any pair havinf a sum "+target+" : "+targetSumPair(arr, target));
+	}
+}
+
+=================================================================
+if one want to print pairs also;
+=================================================================
+
+import java.util.ArrayList;
+
+public class Main
+{
+    static ArrayList<String> targetSumPair(int[]  arr,int target){
+        int left = 0, right = arr.length - 1;
+        ArrayList<String> pairs = new ArrayList<>();
+        
+        while(left < right){
+            int currSum = arr[left] + arr[right];
+            
+            if(currSum == target){
+                pairs.add("Yes!, Pair : ("+arr[left]+", "+arr[right]+")");
+                left++;
+            }
+            else if(currSum < target) left++;
+            else right--;
+        }
+        
+        return pairs;
+    }
+    
+	public static void main(String[] args) {
+		int arr[] = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39};
+	    int target = 50;
+		System.out.println("Does array have any pair havinf a sum "+target+" : \n"+targetSumPair(arr, target));
+	}
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+7) Given two strings s1 and s2 consisting of lowercase characters, the task is to check whether the two given strings are anagrams of each other or not. An anagram of a string is another string that contains the same characters, only the order of characters can be different. For example, “act” and “tac” are anagrams of each other.
+
+Examples:
+
+Input: str1 = “listen”  str2 = “silent”
+Output: “Anagram”
+Explanation: All characters of “listen” and “silent” are the same.
+
+
+Input: str1 = “gram”  str2 = “arm”
+Output: “Not Anagram”
+
+
+-->
+
+import java.util.HashMap;
+
+public class Main
+{
+    static boolean areAnagram(String s1, String s2){
+        if(s1.length() != s2.length()){
+            return false;
+        }
+        
+        HashMap<Character, Integer> charFreq = new HashMap<>();
+        
+        for(char ch : s1.toCharArray()){
+            charFreq.put(ch, charFreq.getOrDefault(ch, 0) + 1);
+        }
+        
+        for(char ch : s2.toCharArray()){
+            if(!charFreq.containsKey(ch)){
+                return false;
+            }
+            
+            charFreq.put(ch, charFreq.get(ch) - 1);
+            
+            if(charFreq.get(ch) == 0){
+                charFreq.remove(ch);
+            }
+        }
+        
+        return charFreq.isEmpty();
+    }
+    
+	public static void main(String[] args) {
+	    String s1 = "listen";
+	    String s2 = "silent";
+	    
+	    if(areAnagram(s1, s2)){
+	        System.out.print("Anagram");
+	    }
+	    else{
+	        System.out.print("Not Anagram");
+	    }
+	}
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+
+ 8)Given an array of integers of size ‘n’, Our aim is to calculate the maximum sum of ‘k’
+ consecutive elements in the array(Using Sliding Window Technique)
+
+ Input : arr[] = {100, 200, 300, 400}, k = 2
+ Output : 700
+
+ Input : arr[] = {1, 4, 2, 10, 23, 3, 1, 0, 20}, k = 4
+ Output : 39
+ Weget maximum sum by adding subarray {4, 2, 10, 23} of size 4.
+
+ Input : arr[] = {2, 3}, k = 3
+ Output : Invalid
+ There is no subarray of size 3 as size of whole array is 2.
+
+
+public class Main
+{
+    static int[] maxSum(int[] arr, int k){
+        if(arr.length < k) return new int[0];
+        
+        int maxSum = Integer.MIN_VALUE;
+        int leftIdx = -1, rightIdx = -1;
+        
+        for(int i = 0; i < arr.length - k; i++){
+            int sum = 0;
+            for(int j = i; j < i+k; j++){
+                sum += arr[j];
+            }
+            
+            if(sum > maxSum){
+                maxSum = sum;
+                leftIdx = i;
+                rightIdx = i+k;
+            }
+        }
+        
+        int ans[] = new int[k+1];
+        int idx = 0;
+        
+        for(int i = leftIdx; i < rightIdx; i++){
+            ans[idx++] = arr[i];
+        }
+        
+        //Last Index Of Array Contains the Maximum Sum We Had Found!
+        ans[idx] = maxSum;
+        
+        return ans;
+    }
+    
+	public static void main(String[] args) {
+	    int arr[] = {1, 4, 2, 10, 23, 3, 1, 0, 20};
+	    int k = 4;
+		
+		int result[] = maxSum(arr, k);
+		
+		System.out.print("Maximum sum of "+k+" consecutive elements in the array : ");
+		for(int ele : result){
+		    System.out.print(ele+" ");
+		}
+		System.out.print("\nMaximun Sum : "+result[k]);
+	}
+}
+
+========================================(Sliding Window : O(n)
+
+public class Main
+{
+    static int maxSum(int[] arr, int k){
+        if(arr.length < k){
+            System.out.println("Invalid");
+            return -1;
+        }
+        
+        int maxSum = 0;
+        
+        for(int i = 0; i < k; i++){
+            maxSum += arr[i];
+        }
+        
+        int windowSum = maxSum;
+        for(int i = k; i < arr.length; i++){
+            windowSum += arr[i] - arr[i - k];
+            maxSum = Math.max(maxSum, windowSum);
+        }
+        
+        return maxSum;
+    }
+    
+	public static void main(String[] args) {
+	    int arr[] = {1, 4, 2, 10, 23, 3, 1, 0, 20};
+	    int k = 4;
+		
+		System.out.print("Maximun Sum : "+maxSum(arr, k));
+	}
+}
+
+
+
+-----------------------------------------------------------------------------------------------------------
+
+ 9)You are given an array of prices where prices[i] is the price of a given stock on an ith day. You
+ want to maximize your profit by choosing a single day to buy one stock and choosing a
+ different day in the future to sell that stock. Return the maximum profit you can achieve from
+ this transaction. If you cannot achieve any profit, return 0.
+
+ Input: prices = [7,1,5,3,6,4]
+ Output: 5
+ Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+
+
+public class Main
+{
+    static int maxProfit(int stocksPrice[]){
+        int buyPrice = Integer.MAX_VALUE, maxProfit = 0;
+        
+        for(int i = 0; i < stocksPrice.length; i++){
+            if(buyPrice < stocksPrice[i]){
+                int profit = stocksPrice[i] - buyPrice;
+                maxProfit = Math.max(maxProfit, profit);
+            }
+            else{
+                buyPrice = stocksPrice[i];
+            }
+        }
+        
+        return maxProfit;
+    }
+    
+	public static void main(String[] args) {
+	    int stocksPrice[] = {9,8,7,6,5,4,3,2,1};
+		System.out.println("Maximum Profit : "+maxProfit(stocksPrice));
+	}
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+10)Given an integer array, find the maximum length subarray having a given sum.(USE
+ HASHMAPConcept)
+
+ Input:nums[] = { 5, 6,-5, 5, 3, 5, 3,-2, 0 }target = 8
+ Output:{-5, 5, 3, 5 }
+
+ Subarrays with sum 8 are {-5, 5, 3, 5 },{ 3, 5 },{ 5, 3 }
+ The longest subarray is {-5, 5, 3, 5 } having length 4.
+
+-->
+
+import java.util.HashMap;
+
+public class Main
+{
+    static int[] maxLengthSubarray(int arr[], int target){
+        int maxLength = 0;
+        int endIndex = -1;
+        int sum = 0;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        
+        for(int i = 0; i < arr.length; i++){
+            sum += arr[i];
+            
+            if(map.containsKey(sum - target)){
+                if(i - map.get(sum - target) > maxLength){
+                    maxLength = i - map.get(sum - target);
+                    endIndex = i;
+                }
+            }
+            
+            if(!map.containsKey(sum)){
+                map.put(sum, i);
+            }
+        }
+        
+        int[] result = new int[maxLength];
+        for(int i = 0; i < maxLength; i++){
+            result[i] = arr[endIndex - maxLength + 1 + i];
+        }
+        
+        return result;
+    }
+    
+	public static void main(String[] args) {
+	    int[] arr = {5,6,-5,5,3,5,3,-2,0};
+	    int target = 8;
+	    
+	    int[] result = maxLengthSubarray(arr, target);
+	    
+	    System.out.print("Max Length Subaaray : ");
+	    for(int ele : result){
+	        System.out.print(ele+" ");
+	    }
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
