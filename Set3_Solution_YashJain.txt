@@ -7,7 +7,7 @@
  
                                         LIST OF Programs  
                                              Set - 3 
-                                           Algolution 
+                                            Algolution 
 
 Ques 1) In the theory of numbers, square free numbers have a special place. A square free number
 is one that is not divisible by a perfect square (other than 1). Thus 72 is divisible by 36 (a
@@ -63,6 +63,84 @@ N=72. The numbers that divide 72 are
 1 is not considered square free. 4, 9 and 36 are perfect squares, and 8,12,18,24 and 72 are
 divisible by one of them. Hence only 2, 3 and 6 are square free. (It is easily seen that none of
 them are divisible by a perfect square). The result is 3.
+
+
+---->
+
+
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class Main
+{
+	public static void main(String[] args) {
+	    Scanner sc = new Scanner(System.in);
+	    int n = sc.nextInt();
+	    
+	    int count = 0;
+	    
+	    for(int i = 2; i < n; i++){
+	        if(n % i == 0 && isSquareFree(i)){
+	            System.out.print(i+" ");
+	            count++;
+	        }
+	    }
+	    
+		System.out.println("\n"+count);
+	}
+	
+	static boolean isSquareFree(int x){
+	    for(int i = 2; i*i <= x; i++){
+	        if(x % (i*i) == 0){
+	            return false;
+	        }
+	    }
+	    
+	    return true;
+	}
+}
+
+
+---------------------------------------------------------------------------------
+
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class Main
+{
+	public static void main(String[] args) {
+	    Scanner sc = new Scanner(System.in);
+	    System.out.print("Enter Integer Number : ");
+	    int n = sc.nextInt();
+	    
+	    int count = 0;
+	    ArrayList<Integer> factors = new ArrayList<>();
+	    System.out.print("Factors : 1 ");
+	    for(int i = 2; i < n; i++){
+	        if(n % i == 0){
+	            System.out.print(i+" ");
+	            if(isSquareFree(i)){
+    	           factors.add(i);
+    	            count++;
+	            }
+	        }
+	    }
+	    
+		System.out.println("\nTotal square free factors : "+count+"\nfactors are : "+ factors);
+	}
+	
+	static boolean isSquareFree(int factor){
+	    for(int i = 2; i*i <= factor; i++){
+	        if(factor % (i*i) == 0){
+	            return false;
+	        }
+	    }
+	    
+	    return true;
+	}
+}
+
+
 ___________________________________________________________________________________________________________
 
 Ques 2) Given an array A of size N where, 1<= N <= 10^5. The task is to find the OR of all possible
@@ -108,7 +186,7 @@ public class SubarrayOring {
 }
 
 
-//-----------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 
 public class SubarrayOring {
@@ -228,7 +306,7 @@ Constraints:
 1 <= s.length <= 104
 s consists of parentheses only '()'.
 
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 import java.util.Stack;
 
@@ -295,7 +373,7 @@ Constraints:
 s consists of parentheses only '()[]{}'.
 Example 1:
 
---------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
 
 import java.util.Stack;
 
@@ -381,6 +459,43 @@ One way to convert the given string to palindrome is, shift the character at the
 and the result will be "abba", which is a palindrome. Another way is to shift the character at the
 tail to the head, and the result will be "baab", which is also a palindrome. Both require only one
 shift.
+
+
+----->
+
+public class Main
+{
+    static boolean isPalindrome(String s){
+        for(int i = 0; i < s.length()/2; i++){
+            if(s.charAt(i) != s.charAt(s.length()-i-1)){
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    static int cyclicPlaindrome(String str){
+        if(isPalindrome(str)){
+            return 0;
+        }
+        
+        String s = str + str;
+        
+        for(int i = 1; i < s.length()-str.length(); i++){
+            String window = s.substring(i, i+str.length());
+            if(isPalindrome(window)){
+                return Math.min(i, str.length()-i);
+            }
+        }
+        
+        return -1;
+    }
+    
+	public static void main(String[] args) {
+		System.out.println(cyclicPlaindrome("baaaa"));
+	}
+}
 ___________________________________________________________________________________________________________
 
 Ques 7) One person hands over the list of digits to Mr. String, But Mr. String understands only strings.
@@ -524,6 +639,31 @@ Input: sum = 5, coins[] = {4}
 Output: 0
 Explanation: We cannot make sum 5 with the given coins
 
+
+--->
+
+import java.util.Scanner;
+
+public class Main
+{
+    static int totCombination(int[] coins, int sum){
+        int dp[] = new int[sum+1];
+        dp[0] = 1;
+        
+        for(int coin : coins){
+            for(int i = coin; i <= sum; i++){
+                dp[i] += dp[i - coin];
+            }
+        }
+        
+        return dp[sum];
+    }
+    
+	public static void main(String[] args) {
+		System.out.println(totCombination(new int[]{2,5,3,6}, 10));
+	}
+}
+
 ___________________________________________________________________________________________________________
 
 
@@ -545,6 +685,38 @@ Example 2:
 Input: text1 = "abc", text2 = "abc"
 Output: 3
 Explanation: The longest common subsequence is "abc" and its length is 3.
+
+
+----->
+
+
+public class Main
+{
+    static int longestCommonSubsequence(String str1, String str2){
+        int len1 = str1.length();
+        int len2 = str2.length();
+        int[][] grid = new int[len1+1][len2+1];
+        
+        for(int i = 1; i <= len1; i++){
+            for(int j = 1; j <= len2; j++){
+                if(str1.charAt(i-1) == str2.charAt(j-1)){
+                    grid[i][j] = grid[i-1][j-1] + 1; 
+                }
+                else{
+                    grid[i][j] = Math.max(grid[i-1][j], grid[i][j-1]);
+                }
+            }
+        }
+        
+        return grid[len1][len2];
+    }
+    
+	public static void main(String[] args) {
+	    String str1 = "abcde";
+	    String str2 = "ace";
+	    System.out.println("Longest common subsequence in '"+str1+"' and '"+str2+"' is of length : "+longestCommonSubsequence(str1, str2));
+	}
+}
 
 __________________________________________________________________________________________________________
 
@@ -620,7 +792,7 @@ k = 4
 Output : 1400
 
 
--------------------------------------
+-----------------------------------------------------------
 
 import java.util.PriorityQueue;
 
